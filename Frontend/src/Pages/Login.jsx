@@ -25,6 +25,10 @@ const Login = () => {
     }
     console.log(userInfo)
 
+    axios.create({
+    baseURL: `{http://localhost:5000`
+    })
+
     axios.post('/api/user/login', userInfo).then((res) => {
 
         console.log(res.data)
