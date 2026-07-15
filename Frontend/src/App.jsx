@@ -2,7 +2,7 @@ import React from 'react'
 import Left from './layout/Left'
 import Right from './layout/Right'
 import Logout from './layout/Logout'
-import Signup from './Pages/Signup'
+import Signup from './Pages/SignUp'
 import Login from './Pages/Login'
 
 import toast, { Toaster } from 'react-hot-toast';
