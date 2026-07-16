@@ -2,6 +2,8 @@ import React from 'react'
 import { useForm } from "react-hook-form"
 import { useAuth } from '../context/AuthProvider'
 import axios from 'axios'
+
+import api from "../axios.js"
 import { useNavigate, Link } from "react-router-dom";
 import toast from 'react-hot-toast';
 
@@ -25,12 +27,12 @@ const Login = () => {
     }
     console.log(userInfo)
 
-    axios.create({
-    baseURL:  import.meta.env.VITE_API_URL,
-    withCredentials: true,
-    })
+    // axios.create({
+    // baseURL:  import.meta.env.VITE_API_URL,
+    // withCredentials: true,
+    // })
 
-    axios.post('/api/user/login', userInfo).then((res) => {
+    api.post('/api/user/login', userInfo).then((res) => {
 
         console.log(res.data)
         if(res.data){
@@ -57,6 +59,8 @@ const Login = () => {
 
         console.log(error)
     })
+
+    console.log("Backend URL - ",import.meta.env.VITE_API_URL);
     
 }
 
