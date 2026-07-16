@@ -17,9 +17,9 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
   origin: [
-     "http://localhost:5173", // Local development
-      process.env.CLIENT_URL   // Vercel frontend
-  ],
+        "http://localhost:5173", // Local development
+        process.env.CLIENT_URL   // Vercel frontend
+  ].filter(Boolean),
   credentials: true,
 })
 );
