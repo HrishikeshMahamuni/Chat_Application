@@ -26,7 +26,8 @@ const Login = () => {
     console.log(userInfo)
 
     axios.create({
-    baseURL: `{http://localhost:5000`
+    baseURL:  import.meta.env.VITE_API_URL,
+    withCredentials: true,
     })
 
     axios.post('/api/user/login', userInfo).then((res) => {
