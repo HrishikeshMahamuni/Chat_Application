@@ -15,14 +15,32 @@ dotenv.config();
 
 app.use(cookieParser());
 app.use(express.json());
+// app.use(cors({
+//   origin: [
+//         "http://localhost:5173", // Local development
+//         process.env.CLIENT_URL   // Vercel frontend
+//   ].filter(Boolean),
+//   credentials: true,
+// })
+// );
+
 app.use(cors({
-  origin: [
-        "http://localhost:5173", // Local development
-        process.env.CLIENT_URL   // Vercel frontend
-  ].filter(Boolean),
+  origin: function (origin, callback) {
+    console.log("Origin:", origin);
+
+    const allowedOrigins = [
+      "http://localhost:5173",
+      process.env.CLIENT_URL
+    ];
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
-})
-);
+}));
 
 const PORT = process.env.PORT || 3000;
 // console.log("MongoDB URI",process.env.MONGODB_URI);
