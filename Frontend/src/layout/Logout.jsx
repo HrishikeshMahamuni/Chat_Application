@@ -18,7 +18,7 @@ const Logout = () => {
     setLoading(true);
 
     try {
-        const response = await  axios.post('/api/user/logout')
+        const response = await  api.post('/api/user/logout')
         localStorage.removeItem("userInfo");
         Cookies.remove('jwt');
         setLoading(false);

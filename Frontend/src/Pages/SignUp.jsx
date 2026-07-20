@@ -30,7 +30,7 @@ const Signup = () => {
     }
     console.log(userInfo)
     
-     await axios.post('/api/user/signup', userInfo).then((res) => {
+     await api.post('/api/user/signup', userInfo).then((res) => {
 
         console.log(res.data)
         if(res.data){

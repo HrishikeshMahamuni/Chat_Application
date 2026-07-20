@@ -19,7 +19,7 @@ export const SocketProvider = ({ children }) => {
 
     console.log("Socket URL : ",SOCKET_URL)
     if (authuser) {
-      const tempsocket = io("http://localhost:3000", {
+      const tempsocket = io(SOCKET_URL || "http://localhost:3000", {
         query: {
           userId: authuser.user._id
         },
