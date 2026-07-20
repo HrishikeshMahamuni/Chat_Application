@@ -5,6 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import userRoutes from './Routes/user.routes.js';
 import messageRoutes from './Routes/message.routes.js';
+import path from 'path';
 import { server, app, io } from './SocketIO/server.js';
 
 // require("dotenv").config();
@@ -63,6 +64,32 @@ app.get('/', (req, res) => {
 
 app.use('/api/user', userRoutes);
 app.use('/api/message', messageRoutes);
+
+//--------------------------------
+
+const dirName = path.resolve();
+
+if(process.env.NODE_ENV==='production'){
+  app.use(express.static(path.join(dirName,"/Frontend/dist")));
+  app.get("*",(req,res) => {
+    res.sendFile(path.resolve(dirName, "Frontend", "dist", "index.html"))
+  })
+  
+}
+else{
+  app.get("/",(req,res) => {
+    res.send("API is Running Successfully")
+  })
+}
+
+
+
+//--------------------------------
+
+// if(process.env.NODE_ENV === 'production'){
+//   const  dirPath = path.resolve();
+//   app.use(express.static("./Frontend"))
+// }
 
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

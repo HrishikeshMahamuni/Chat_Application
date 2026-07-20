@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from "react";
-// import axios from "axios";
+import axios from "axios";
 import useConversation from "../StateManage/useConversation";
 import api from "../axios";
 
@@ -30,7 +30,7 @@ const useSendMessage = () => {
 
           try {
             setLoading(true);
-            const { data } = await api.post(
+            const { data } = await axios.post(
               `/api/message/send/${selectedConversation._id}`,
               { message:  text }
             );

@@ -1,52 +1,57 @@
-import {createContext, useState, useEffect, useContext} from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import { useAuth } from "./AuthProvider";
-import io from "socket.io-client";
+import { io } from "socket.io-client";
 
 export const SocketContext = createContext();
 
-export const useSocketContext = () =>{ 
-   return useContext(SocketContext);
+export const useSocketContext = () => {
+  return useContext(SocketContext);
 }
 
-export const SocketProvider = ({children}) => {
-    const [socket, setSocket] = useState(null);
-    const [onlineUsers, setOnlineUsers] = useState([]);
-    const {authuser} = useAuth();
+export const SocketProvider = ({ children }) => {
+  const [socket, setSocket] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const { authuser } = useAuth();
 
-    useEffect(() => {
-        if(authuser) {
-            const tempsocket = io("http://localhost:3000", {
-                query: {
-                    userId: authuser.user._id
-                },
-            });
-            setSocket(tempsocket);
+  const SOCKET_URL = import.meta.env.VITE_API_URL
 
-            
-            tempsocket.on("getOnline", (users) => {
+  useEffect(() => {
 
-                    setOnlineUsers(users);
-                    console.log("A user disconnected",tempsocket.id);
-                   
-                });
-                return () => {
-                    socket.close();
-                }
-        }
-        else {
-            if(socket) {
-                socket.close();
-                setSocket(null);
-            }
-        }
-    }, [authuser]);
+    console.log("Socket URL : ",SOCKET_URL)
+    if (authuser) {
+      const tempsocket = io("http://localhost:3000", {
+        query: {
+          userId: authuser.user._id
+        },
+         transports: ["websocket"],  
+         withCredentials: true
+      });
+      setSocket(tempsocket);
 
-    return (
-        <SocketContext.Provider value={{socket, onlineUsers}}>
-            {children}
-        </SocketContext.Provider>
-    );
-    
+
+      tempsocket.on("getOnline", (users) => {
+
+        setOnlineUsers(users);
+        console.log("A user disconnected", tempsocket.id);
+
+      });
+      return () => {
+        socket.close();
+      }
+    }
+    else {
+      if (socket) {
+        socket.close();
+        setSocket(null);
+      }
+    }
+  }, [authuser]);
+
+  return (
+    <SocketContext.Provider value={{ socket, onlineUsers }}>
+      {children}
+    </SocketContext.Provider>
+  );
+
 };
 
- 

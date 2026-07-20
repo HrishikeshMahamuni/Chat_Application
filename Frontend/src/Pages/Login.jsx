@@ -27,12 +27,12 @@ const Login = () => {
     }
     console.log(userInfo)
 
-    // axios.create({
-    // baseURL:  import.meta.env.VITE_API_URL,
-    // withCredentials: true,
-    // })
+    axios.create({
+    baseURL:  import.meta.env.VITE_API_URL,
+    withCredentials: true,
+    })
 
-    api.post('/api/user/login', userInfo).then((res) => {
+    axios.post('/api/user/login', userInfo).then((res) => {
 
         console.log(res.data)
         if(res.data){

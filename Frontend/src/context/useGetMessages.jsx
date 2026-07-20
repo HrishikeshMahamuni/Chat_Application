@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-// import axios from "axios";
+import axios from "axios";
 import useConversation from "../StateManage/useConversation"; 
 import api from "../axios";
 
@@ -23,7 +23,7 @@ const useGetMessages = () => {
       try {
         setLoading(true);
 
-        const { data } = await api.get(
+        const { data } = await axios.get(
           `/api/message/get/${selectedConversation._id}`
         );
 

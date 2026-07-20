@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useAuth } from '../context/AuthProvider'
 import { useNavigate, Link } from "react-router-dom";
 import toast from 'react-hot-toast';
+
 import api from "../axios.js"
 
 const Signup = () => {
@@ -29,7 +30,7 @@ const Signup = () => {
     }
     console.log(userInfo)
     
-     await api.post('/api/user/signup', userInfo).then((res) => {
+     await axios.post('/api/user/signup', userInfo).then((res) => {
 
         console.log(res.data)
         if(res.data){

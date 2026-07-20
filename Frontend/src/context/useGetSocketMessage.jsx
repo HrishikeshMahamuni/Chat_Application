@@ -10,8 +10,7 @@ const useGetSocketMessage = () => {
 
     useEffect(() => {
 
-        const notification = new Audio('/MessageTune.mp3');
-        notification.play();
+        
 
         socket.on("newMessage", (newMessage) => {
             setMessages(...Messages, newMessage);

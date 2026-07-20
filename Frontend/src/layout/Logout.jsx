@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { CiLogout } from "react-icons/ci";
 import toast from 'react-hot-toast';
 
+import api from '../axios'
+
 const Logout = () => {
 
   const [loading , setLoading] = useState(false);
