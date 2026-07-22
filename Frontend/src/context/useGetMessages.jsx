@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../axios.js";
 import useConversation from "../StateManage/useConversation";
-import api from "../axios.js"
 
 
 const useGetMessages = () => {

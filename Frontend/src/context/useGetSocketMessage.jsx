@@ -11,7 +11,7 @@ const useGetSocketMessage = () => {
 
     useEffect(() => {
 
-        const notification = new Audio('../assets/iphone notification tone.mp3');
+        const notification = new Audio('/MessageTune.mp3');
         notification.play();
 
         socket.on("newMessage", (newMessage) => {

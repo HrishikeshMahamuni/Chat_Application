@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie'
-import api from "../axios.js"
+import api from '../axios.js'
 
 
 const getAllUsers = () => {

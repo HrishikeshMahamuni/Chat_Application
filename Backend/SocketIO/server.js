@@ -1,6 +1,9 @@
 import { Server } from "socket.io";
 import  http  from "http";
 import express from 'express';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();  
 
@@ -11,17 +14,13 @@ const allowedOrigins = [
   "http://localhost:5174",
   "http://localhost:3000",
   "http://localhost:3001",
+  "http://localhost:3002",
 ].filter(Boolean);
 
 const io = new Server(server, {
     cors: {
-        origin: (origin, callback) => {
-            if (!origin) return callback(null, true);
-            if (allowedOrigins.includes(origin)) return callback(null, true);
-            return callback(new Error('CORS not allowed'), false);
-        },
-        methods: ["GET", "POST"],
-        credentials: true
+        origin: process.env.VITE_API_URL,
+        methods: ["GET", "POST"]
     }
 });
 

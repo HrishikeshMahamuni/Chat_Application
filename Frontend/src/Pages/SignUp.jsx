@@ -4,6 +4,7 @@ import api from '../axios.js'
 import { useAuth } from '../context/AuthProvider'
 import { useNavigate, Link } from "react-router-dom";
 import toast from 'react-hot-toast';
+
 // import api from "../axios.js"
 
 const Signup = () => {

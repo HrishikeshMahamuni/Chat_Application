@@ -6,6 +6,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import userRoutes from './Routes/user.routes.js';
 import messageRoutes from './Routes/message.routes.js';
+import path from 'path';
 import { server, app, io } from './SocketIO/server.js';
 
 
@@ -13,31 +14,34 @@ import { server, app, io } from './SocketIO/server.js';
 
 app.use(cookieParser());
 app.use(express.json());
-const allowedOrigins = [
-  process.env.CLIENT_URL,
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'http://localhost:3000',
-  'http://localhost:3001',
-].filter(Boolean);
-
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) {
-      console.log('CORS: no origin, allowing');
-      return callback(null, true);
-    }
-    if (allowedOrigins.includes(origin)) {
-      console.log('CORS: allowing origin', origin);
-      return callback(null, true);
-    }
-    console.warn('CORS: denying origin', origin);
-    return callback(new Error('CORS policy does not allow this origin'), false);
-  },
+  origin: [
+        "http://localhost:5173", // Local development
+        "http://localhost:5174",
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://localhost:3002",
+        process.env.CLIENT_URL   // Vercel frontend
+  ].filter(Boolean),
   credentials: true,
 }));
 
-const PORT = process.env.PORT || 3001;
+// Ensure CORS headers are always present (covers preflight and non-standard setups)
+app.use((req, res, next) => {
+  const origin = req.headers.origin || '';
+  if (origin) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+const PORT = parseInt(process.env.PORT, 10) || 3001;
 // console.log("MongoDB URI",process.env.MONGODB_URI);
 // const connectDB = mongoose.connect(process.env.MONGODB_URI);
 
@@ -61,17 +65,13 @@ app.get('/', (req, res) => {
 app.use('/api/user', userRoutes);
 app.use('/api/message', messageRoutes);
 
-server.on('error', (err) => {
-  console.error('Server error during startup:', err);
-  if (err && err.code === 'EADDRINUSE') {
-    const fallback = parseInt(PORT) + 1;
-    console.log(`Port ${PORT} in use, trying ${fallback}`);
-    server.listen(fallback, () => console.log(`Server started on fallback port ${fallback}`));
-  } else {
-    process.exit(1);
-  }
-});
-
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+}).on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. Change PORT in Backend/.env or stop the conflicting process.`);
+  } else {
+    console.error('Server startup error:', err);
+  }
+  process.exit(1);
 });
