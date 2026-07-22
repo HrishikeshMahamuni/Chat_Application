@@ -11,9 +11,6 @@ const Right = () => {
 
   const {selectedConversation , setSelectedConversation} = useConversation();
   
-  useEffect(()=> {
-    return setSelectedConversation(selectedConversation);
-  },[selectedConversation])
 
 
   return (

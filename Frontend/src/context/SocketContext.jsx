@@ -16,32 +16,31 @@ export const SocketProvider = ({ children }) => {
   const SOCKET_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
-        if(authuser) {
-            const tempsocket = io("http://localhost:3000", {
-                query: {
-                    userId: authuser.user._id
-                },
-            });
-            setSocket(tempsocket);
+      const userId = authuser?.user?._id;
 
-            
-            tempsocket.on("getOnline", (users) => {
+      if (userId && !socket) {
+        const tempsocket = io(SOCKET_URL || "http://localhost:4000", {
+          query: { userId },
+        });
 
-                    setOnlineUsers(users);
-                    console.log("A user disconnected",tempsocket.id);
-                   
-                });
-                return () => {
-                    socket.close();
-                }
-        }
-        else {
-            if(socket) {
-                socket.close();
-                setSocket(null);
-            }
-        }
-    }, [authuser]);
+        setSocket(tempsocket);
+
+        tempsocket.on("getOnline", (users) => {
+          setOnlineUsers(users);
+          console.log("getOnline", tempsocket.id);
+        });
+
+        return () => {
+          try { tempsocket.disconnect(); } catch (e) {}
+          setSocket((prev) => (prev === tempsocket ? null : prev));
+        };
+      }
+
+      if (!userId && socket) {
+        try { socket.disconnect(); } catch (e) {}
+        setSocket(null);
+      }
+    }, [authuser, socket]);
 
   return (
     <SocketContext.Provider value={{ socket, onlineUsers }}>

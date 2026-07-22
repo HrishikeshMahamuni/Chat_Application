@@ -78,10 +78,10 @@ const getMessages = async (req, res) => {
         }).populate("messages");
         if(!conversation){
             console.log("Conversation Not Found")
-            return res.status(201).json({messages : "Conversation Not Found"});
+            return res.status(200).json({message: []});
         }
-        const message = conversation.messages
-        res.status(201).json({message});
+        const message = conversation.messages;
+        res.status(200).json({message});
 
     }
     catch(error){
