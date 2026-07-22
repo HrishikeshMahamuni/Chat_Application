@@ -14,24 +14,24 @@ export const SocketProvider = ({children}) => {
     const {authuser} = useAuth();
 
     useEffect(() => {
-        if(authuser) {
-            const tempsocket = io("http://localhost:3000", {
-                query: {
-                    userId: authuser.user._id
-                },
+        const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+        if (authuser) {
+            const userId = authuser?.user?._id || authuser?._id;
+            if (!userId) return;
+            const tempsocket = io(BACKEND_URL, {
+                query: { userId },
+                withCredentials: true,
+                transports: ["websocket", "polling"]
             });
             setSocket(tempsocket);
 
-            
             tempsocket.on("getOnline", (users) => {
-
                     setOnlineUsers(users);
-                    console.log("A user disconnected",tempsocket.id);
-                   
+                    console.log("A user connected",tempsocket.id);
                 });
-                return () => {
-                    socket.close();
-                }
+            return () => {
+                try { tempsocket.close(); } catch (e) { /* ignore */ }
+            }
         }
         else {
             if(socket) {

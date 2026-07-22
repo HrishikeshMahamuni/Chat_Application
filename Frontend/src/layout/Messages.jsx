@@ -3,9 +3,11 @@ import React from 'react'
 
 const Messages = ({message}) => {
 
-    const authuser = JSON.parse(localStorage.getItem("userInfo"));
- 
-        const itsMe = message.senderId === authuser.user._id
+    const stored = localStorage.getItem("userInfo");
+    const authuser = stored ? JSON.parse(stored) : null;
+    const authId = authuser?.user?._id || authuser?._id || null;
+
+    const itsMe = authId ? message.senderId === authId : false;
 
         const chatName = itsMe ? "chat-end" : "chat-start";
         const chatColor = itsMe ? "chat-bubble-primary" : "chat-bubble-accent";

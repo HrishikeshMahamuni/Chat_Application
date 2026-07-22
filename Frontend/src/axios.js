@@ -1,9 +1,10 @@
 import axios from 'axios'
 
-console.log("API URL:", import.meta.env.VITE_API_URL);
+const BASE = import.meta.env.VITE_API_URL || "http://localhost:3001";
+console.log("API URL:", BASE);
 
 const api = axios.create({
-  baseURL: "https://chat-application-backend-y4h1.onrender.com/",
+  baseURL: BASE,
   withCredentials: true,
 });
 

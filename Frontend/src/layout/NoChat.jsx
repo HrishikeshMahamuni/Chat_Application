@@ -3,9 +3,8 @@ import { useAuth } from '../context/AuthProvider'
 
 const NoChat = () => {
 
-     const {authuser, setAuthuser} = useAuth()
-
-    console.log("Auth User = " , authuser.user.name)
+    const {authuser, setAuthuser} = useAuth()
+      const displayName = authuser?.user?.name || authuser?.name || 'User'
 
   return (
      <>
@@ -20,7 +19,7 @@ const NoChat = () => {
 
         {/* Heading */}
         <h2 className="text-3xl font-bold text-white">
-          Welcome {authuser.user.name} Chat!
+          Welcome {displayName} Chat!
         </h2>
 
         {/* Description */}

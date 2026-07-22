@@ -1,8 +1,6 @@
 import React from 'react'
 import { useForm } from "react-hook-form"
 import { useAuth } from '../context/AuthProvider'
-import axios from 'axios'
-
 import api from "../axios.js"
 import { useNavigate, Link } from "react-router-dom";
 import toast from 'react-hot-toast';
@@ -25,42 +23,24 @@ const Login = () => {
         email: data.email,
         password: data.password
     }
-    console.log(userInfo)
 
-    // axios.create({
-    // baseURL:  import.meta.env.VITE_API_URL,
-    // withCredentials: true,
-    // })
-
-    api.post('/api/user/login', userInfo).then((res) => {
-
+    api.post('/api/user/login', userInfo)
+    .then((res) => {
         console.log(res.data)
-        if(res.data){
-            toast.success("User Logged In Successfully")
-        }
-
-        if(res.data ==! res.data.email || res.data ==! res.data.password){
-            res.status(400).json({
-                message: "Invalid credentials"
-            })
-            toast.error("Invalid credentials")
-        }
-        localStorage.setItem("userInfo", JSON.stringify(res.data))
-        
-        setAuthuser(res.data)
+        const user = res.data.user || res.data;
+        toast.success("User Logged In Successfully")
+        localStorage.setItem("userInfo", JSON.stringify(user))
+        setAuthuser(user)
         navigate("/");
-        
     })
     .catch((error) => {
-
-         if(error.response){
-            alert(error.response.data.message);
-        }
-
         console.log(error)
+        const msg = error?.response?.data?.message || error.message || 'Login failed';
+        toast.error(msg)
+        alert(msg)
     })
 
-    console.log("Backend URL - ",import.meta.env.VITE_API_URL);
+    console.log("Backend URL - ", import.meta.env.VITE_API_URL);
     
 }
 
@@ -81,7 +61,7 @@ const Login = () => {
                         placeholder="Email"
                         {...register("email" , {required: "This field is required"})}  
                     />
-                    {errors.email && <p className='text-red-600'>{errors.name.message}</p>}
+                    {errors.email && <p className='text-red-600'>{errors.email.message}</p>}
 
                     <label className="label">Password</label>
                     <input 
@@ -90,7 +70,7 @@ const Login = () => {
                         placeholder="Password" 
                         {...register("password" , {required: "This field is required"})}
                     />
-                    {errors.password && <p className='text-red-600'>{errors.name.message}</p>}
+                    {errors.password && <p className='text-red-600'>{errors.password.message}</p>}
 
                     <button 
                         className="btn btn-neutral mt-4"

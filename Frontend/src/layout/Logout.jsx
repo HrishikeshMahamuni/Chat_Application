@@ -1,5 +1,5 @@
 import React ,{ useState } from 'react'
-import axios from 'axios'
+import api from '../axios.js'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import { CiLogout } from "react-icons/ci";
@@ -16,12 +16,12 @@ const Logout = () => {
     setLoading(true);
 
     try {
-        const response = await  axios.post('/api/user/logout')
+      const response = await api.post('/api/user/logout')
         localStorage.removeItem("userInfo");
         Cookies.remove('jwt');
         setLoading(false);
         toast.success("User Logged Out Successfully")
-        navigate("/login");
+        navigate("/");
     } 
     catch (error) {
         console.log("Error = ", error);            

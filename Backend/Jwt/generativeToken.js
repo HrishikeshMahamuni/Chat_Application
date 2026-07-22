@@ -4,11 +4,11 @@ const createToken = (userId, res ) => {
     const token = jwt.sign({ userId : userId._id }, process.env.JWT_SECRET, {
         expiresIn: '5d'
     })
+    const isProd = process.env.NODE_ENV === 'production';
     res.cookie('jwt', token, {
         httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-       
+        secure: isProd, // send cookie only over HTTPS in production
+        sameSite: isProd ? 'none' : 'lax', // allow cross-site cookies in production
     })
 }
 

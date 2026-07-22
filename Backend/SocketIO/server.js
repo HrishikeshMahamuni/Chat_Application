@@ -5,10 +5,23 @@ import express from 'express';
 const app = express();  
 
 const server = http.createServer(app);
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:3000",
+  "http://localhost:3001",
+].filter(Boolean);
+
 const io = new Server(server, {
     cors: {
-        origin: process.env.VITE_API_URL,
-        methods: ["GET", "POST"]
+        origin: (origin, callback) => {
+            if (!origin) return callback(null, true);
+            if (allowedOrigins.includes(origin)) return callback(null, true);
+            return callback(new Error('CORS not allowed'), false);
+        },
+        methods: ["GET", "POST"],
+        credentials: true
     }
 });
 
